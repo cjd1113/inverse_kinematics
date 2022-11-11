@@ -1,4 +1,3 @@
-
 import numpy as np
 import scipy as scipy
 
@@ -20,7 +19,6 @@ def Rxyz_rotation(Rx, Ry, Rz) -> np.ndarray:
 
 
 def DCM_dot(phi, theta, psi, phi_dot, theta_dot, psi_dot) -> np.ndarray:
-
     # Note that this is the derivative of the Z-Y-X (123) rotation matrix
 
     phi_t = phi
@@ -35,9 +33,11 @@ def DCM_dot(phi, theta, psi, phi_dot, theta_dot, psi_dot) -> np.ndarray:
     C13dot = -theta_d_t * np.cos(theta_t)
 
     C21dot = phi_d_t * np.cos(phi_t) * np.sin(theta_t) * np.cos(psi_t) + theta_d_t * np.sin(phi_t) * np.cos(theta_t) * \
-             np.cos(psi_t) - psi_d_t * np.sin(phi_t) * np.sin(theta_t) * np.sin(psi_t) + phi_d_t * np.sin(phi_t) * np.sin(psi_t) \
+             np.cos(psi_t) - psi_d_t * np.sin(phi_t) * np.sin(theta_t) * np.sin(psi_t) + phi_d_t * np.sin(
+        phi_t) * np.sin(psi_t) \
              - psi_d_t * np.cos(phi_t) * np.cos(psi_t)
-    C22dot = phi_d_t * np.cos(phi_t) * np.sin(theta_t) * np.sin(psi_t) + theta_d_t * np.sin(phi_t) * np.cos(theta_t) * np.sin(psi_t) \
+    C22dot = phi_d_t * np.cos(phi_t) * np.sin(theta_t) * np.sin(psi_t) + theta_d_t * np.sin(phi_t) * np.cos(
+        theta_t) * np.sin(psi_t) \
              + psi_d_t * np.sin(phi_t) * np.sin(theta_t) * np.cos(psi_t) - phi_d_t * np.sin(phi_t) * np.cos(psi_t) - \
              psi_d_t * np.cos(phi_t) * np.sin(psi_t)
     C23dot = phi_d_t * np.cos(phi_t) * np.cos(theta_t) - theta_d_t * np.sin(phi_t) * np.sin(theta_t)
@@ -54,7 +54,6 @@ def DCM_dot(phi, theta, psi, phi_dot, theta_dot, psi_dot) -> np.ndarray:
 
 
 def body_angular_velocities(ddt_DCM, DCM) -> np.ndarray:
-
     # Unpack Czyx
     C11 = DCM[0, 0]
     C12 = DCM[0, 1]
@@ -104,7 +103,6 @@ def euler_to_quats(phi, theta, psi) -> np.ndarray:
 
 
 def quat_to_euler(q) -> tuple:
-
     R = np.zeros([3, 3])
 
     R[0, 0] = 2 * q[0] ** 2 - 1 + 2 * q[1] ** 2
@@ -119,3 +117,20 @@ def quat_to_euler(q) -> tuple:
 
     return phi, theta, psi
 
+
+def quat_to_rot_mx(q) -> np.ndarray:
+    q0 = q[0]
+    q1 = q[1]
+    q2 = q[2]
+    q3 = q[3]
+
+    # Inertial to Body
+    R_q_rot_ItoB = np.array(
+        [[q0 ** 2 + q1 ** 2 - q2 ** 2 - q3 ** 2, 2 * q1 * q2 + 2 * q0 * q3, 2 * q1 * q3 - 2 * q0 * q2],
+         [2 * q1 * q2 - 2 * q0 * q3, q0 ** 2 - q1 ** 2 + q2 ** 2 - q3 ** 2, 2 * q2 * q3 + 2 * q0 * q1],
+         [2 * q1 * q3 + 2 * q0 * q2, 2 * q2 * q3 - 2 * q0 * q1, q0 ** 2 - q1 ** 2 - q2 ** 2 + q3 ** 2]])
+
+    # Body to Inertial
+    R_q_rot_BtoI = R_q_rot_ItoB.T
+
+    return R_q_rot_BtoI
