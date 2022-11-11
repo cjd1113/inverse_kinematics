@@ -10,9 +10,10 @@ if __name__ == '__main__':
     t = np.linspace(0, 10, 100)
 
     # Generate Euler angles in the inertial frame
-    phi = np.sin(2*t)
-    theta = np.sin(3*t)
-    psi = np.sin(4*t)
+    # phi = np.sin(2*t)
+    phi = 0.5*(t**1)
+    theta = 0*np.sin(3*t)
+    psi = 0*np.sin(4*t)
     # Compute Euler angle derivatives
     phi_dot = np.diff(phi)
     theta_dot = np.diff(theta)
@@ -67,4 +68,24 @@ if __name__ == '__main__':
     plt.plot(ab[2,:])
     plt.legend(['axb', 'ayb', 'azb'])
     plt.title('Body Frame Accelerations')
+
+    plt.figure()
+    plt.plot(px[:-2])
+    plt.plot(py[:-2])
+    plt.plot(pz[:-2])
+    plt.legend(['Px','Py','Pz'])
+    plt.title('Inertial Frame Positions')
+
+    plt.figure()
+    plt.plot(phi[:-2])
+    plt.plot(theta[:-2])
+    plt.plot(psi[:-2])
+    plt.legend(['Phi','Theta','Psi'])
+    plt.title('Euler Angles (Inertial Frame)')
+
+
+
+
+
+
     plt.show()
