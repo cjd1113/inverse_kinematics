@@ -2,12 +2,6 @@
 import numpy as np
 import scipy as scipy
 
-def numerical_derivative(dt) -> float:
-
-
-
-    return 10
-
 
 def Rx_rotation(angle) -> np.ndarray:
     return np.array([[1, 0, 0], [0, np.cos(angle), np.sin(angle)], [0, -np.sin(angle), np.cos(angle)]])
