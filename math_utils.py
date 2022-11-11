@@ -84,5 +84,38 @@ def body_angular_velocities(ddt_DCM, DCM) -> np.ndarray:
     return np.array([wxb, wyb, wzb])
 
 
+def euler_to_quats(phi, theta, psi) -> np.ndarray:
+    sin_psi = np.sin(psi / 2)
+    cos_psi = np.cos(psi / 2)
+    sin_phi = np.sin(phi / 2)
+    cos_phi = np.cos(phi / 2)
+    sin_theta = np.sin(theta / 2)
+    cos_theta = np.cos(theta / 2)
 
+    # The following equations represent the 123 rotation, per equation 297 of Diebel2006.
+    q0_init = cos_psi * cos_theta * cos_phi + sin_psi * sin_theta * sin_phi
+    q1_init = cos_psi * cos_theta * sin_phi - sin_psi * sin_theta * cos_phi
+    q2_init = cos_psi * sin_theta * cos_phi + sin_psi * cos_theta * sin_phi
+    q3_init = sin_psi * cos_theta * cos_phi - cos_psi * sin_theta * sin_phi
+
+    q = np.array([q0_init, q1_init, q2_init, q3_init])
+
+    return q
+
+
+def quat_to_euler(q) -> tuple:
+
+    R = np.zeros([3, 3])
+
+    R[0, 0] = 2 * q[0] ** 2 - 1 + 2 * q[1] ** 2
+    R[1, 0] = 2 * (q[1] * q[2] - q[0] * q[3])
+    R[2, 0] = 2 * (q[1] * q[3] + q[0] * q[2])
+    R[2, 1] = 2 * (q[2] * q[3] - q[0] * q[1])
+    R[2, 2] = 2 * q(0) ** 2 - 1 + 2 * q(3) ** 2
+
+    phi = np.atan2(R[2, 1], R[2, 2])
+    theta = -np.atan(R[2, 0] / np.sqrt(1 - R[2, 0] ** 2))
+    psi = np.atan2(R[1, 0], R[0, 0])
+
+    return phi, theta, psi
 
