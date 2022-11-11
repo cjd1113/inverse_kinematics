@@ -134,3 +134,4 @@ def quat_to_rot_mx(q) -> np.ndarray:
     R_q_rot_BtoI = R_q_rot_ItoB.T
 
     return R_q_rot_BtoI
+

@@ -8,6 +8,8 @@ if __name__ == '__main__':
 
     #Define a time vector
     t = np.linspace(0, 10, 100)
+    dt = t[2] - t[1]
+    Fs = 1/dt
 
     # Generate Euler angles in the inertial frame
     # phi = np.sin(2*t)
